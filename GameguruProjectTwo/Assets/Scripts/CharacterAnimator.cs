@@ -1,18 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    Animator animator;
+    private void Awake()
     {
-        
+        animator = GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
+    }
+
+    private void OnArrivedToTheFinish()
+    {
+        TriggerDancing();
+    }
+
+    public void TriggerDancing()
+    {
+        animator.SetTrigger("Dance");
     }
 }

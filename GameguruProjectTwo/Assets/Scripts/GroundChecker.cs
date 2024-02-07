@@ -18,8 +18,12 @@ public class GroundChecker : MonoSingleton<GroundChecker>
     private void Start()
     {
         currentBlock = BlockSpawnManager.instance.initialBlock;
+        CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
     }
-
+    private void OnArrivedToTheFinish()
+    {
+        SetBlockRay(status: true);
+    }
     void FixedUpdate()
     {
         if (!GameManager.instance.isLevelActive) return;
@@ -47,7 +51,7 @@ public class GroundChecker : MonoSingleton<GroundChecker>
 
     public void SetBlockRay(bool status)
     {
-        blockRay = status;  
+        blockRay = status;
     }
     public BlockController GetCurrentBlock()
     {

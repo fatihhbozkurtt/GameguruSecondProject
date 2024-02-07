@@ -3432,7 +3432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ff83306693c4a48acfecf7ca50eabb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStackCount: 100
+  maxStackCount: 10
   blockPrefab: {fileID: 7962870134787365726, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
   stackPrefab: {fileID: 355018183593848619, guid: 682e20a039ad20246a98ddc6135c432e, type: 3}
   finishLine: {fileID: 8822058165888743613, guid: 50d59dd24e8b8264b890d8c1d9709931, type: 3}

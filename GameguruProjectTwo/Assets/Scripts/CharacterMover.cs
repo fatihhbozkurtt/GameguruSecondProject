@@ -15,6 +15,12 @@ public class CharacterMover : MonoSingleton<CharacterMover>
         if (blockMovement) return;
 
         transform.Translate(transform.forward * speed * Time.deltaTime);
+        CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
+    }
+
+    private void OnArrivedToTheFinish()
+    {
+        SetMovementStatus(block: true);
     }
 
     public void AssignHorizontalCenter(float xValue)

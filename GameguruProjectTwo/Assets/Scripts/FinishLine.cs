@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class FinshLine : MonoBehaviour
+public class FinishLine : MonoBehaviour
 {
     private void Awake()
     {

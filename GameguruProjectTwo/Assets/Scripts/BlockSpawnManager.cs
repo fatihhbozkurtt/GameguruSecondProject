@@ -4,7 +4,7 @@ using System;
 
 public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 {
-    public event Action<BlockController> BlockStoppedEvent;
+ //   public event Action<BlockController> BlockStoppedEvent;
 
     [Header("Configuration")]
     [SerializeField] int maxStackCount;
