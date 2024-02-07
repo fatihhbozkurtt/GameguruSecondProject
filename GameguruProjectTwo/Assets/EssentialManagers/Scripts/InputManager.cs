@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class InputManager : MonoSingleton<InputManager>
 {
-    public event System.Action TouchStartEvent;
+    public event System.Action TouchOccuredEvent;
     public event System.Action TouchEndEvent;
 
     public void OnPointerDown()
     {
-        TouchStartEvent?.Invoke();
+        TouchOccuredEvent?.Invoke();
     }
 
     public void OnPointerUp()

@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class GameStarter : MonoBehaviour, IPointerDownHandler
+public class GameStarter : MonoBehaviour
 {
-    bool ready = false;
 
     private void Start()
     {
-        ready = true;
+        GameManager.instance.StartGame();
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (ready)
-        {
-            ready = false;
-            GameManager.instance.StartGame();
-        }
-    }
+    // bool ready = false;
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    if (ready)
+    //    {
+    //        ready = false;
+    //        GameManager.instance.StartGame();
+    //    }
+    //}
 }
