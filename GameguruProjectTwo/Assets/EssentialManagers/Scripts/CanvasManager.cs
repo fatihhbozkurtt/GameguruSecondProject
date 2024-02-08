@@ -89,7 +89,8 @@ public class CanvasManager : MonoSingleton<CanvasManager>
 
     public void OnTapContinue()
     {
-        FadeOutScreen(GameManager.instance.NextStage, 1);
+        GameManager.instance.NextStage();
+        ShowPanel(PanelType.Game);
     }
     #endregion
     #region FadeInOut

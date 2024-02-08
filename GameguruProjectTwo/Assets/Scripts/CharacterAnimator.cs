@@ -11,6 +11,12 @@ public class CharacterAnimator : MonoBehaviour
     private void Start()
     {
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
+        GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
+    }
+
+    private void OnNextLevelStarted()
+    {
+        TriggerRunning();
     }
 
     private void OnArrivedToTheFinish()
@@ -21,5 +27,10 @@ public class CharacterAnimator : MonoBehaviour
     public void TriggerDancing()
     {
         animator.SetTrigger("Dance");
+    }
+
+    public void TriggerRunning()
+    {
+        animator.SetTrigger("Run");
     }
 }

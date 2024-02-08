@@ -11,11 +11,8 @@ GameObject:
   - component: {fileID: 8545973604948647742}
   - component: {fileID: 8545973604948647743}
   - component: {fileID: 8545973604948647740}
-  - component: {fileID: 8545973604948647741}
-  - component: {fileID: 2042634814922789703}
-  - component: {fileID: 9014747654712094129}
   m_Layer: 0
-  m_Name: Block
+  m_Name: Standing_Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,50 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8545973604948647741
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8545973604948647738}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2042634814922789703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8545973604948647738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bec8208793fc31d45bee62d5e00ee0c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  delta: 1.5
-  speed: 1.5
-  blockMovement: 0
-  initialBlock: 0
-  _index: 0
---- !u!114 &9014747654712094129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8545973604948647738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5701053801e567446bcb9557e2244f81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceBlockPrefab: {fileID: 8545973604948647742}
-  referenceMesh: {fileID: 8545973604948647740}
-  fallingPrefab: {fileID: 8545973604948647738, guid: ae5227e07c56be54cb943c243b35fc0e, type: 3}
-  standPrefab: {fileID: 8545973604948647738, guid: fd263a3bb7d327440b69fb36aa0ca6be, type: 3}
-  last: {fileID: 0}

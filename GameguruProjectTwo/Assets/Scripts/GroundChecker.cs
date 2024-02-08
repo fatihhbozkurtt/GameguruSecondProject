@@ -3,7 +3,6 @@ using System;
 
 public class GroundChecker : MonoSingleton<GroundChecker>
 {
-    public event Action<BlockController> MovedToNewBlockEvent;
 
     [Header("References")]
     [SerializeField] Transform rayOrigin;
@@ -12,18 +11,19 @@ public class GroundChecker : MonoSingleton<GroundChecker>
     [SerializeField] float rayDistance;
 
     [Header("Debug")]
-    [SerializeField] BlockController currentBlock;
+    [SerializeField] BlockMover currentBlock;
     [SerializeField] bool blockRay;
 
     private void Start()
     {
-        currentBlock = BlockSpawnManager.instance.initialBlock;
+        currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
+
+        GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
+        FrontColliderHandler.instance.PrepareToMoveNewBlockEvent += OnMoveToNewBlock;
+        CharacterMover.instance.HorizontalMovementEndedEvent += OnHorizontalMovementEnded;
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
     }
-    private void OnArrivedToTheFinish()
-    {
-        SetBlockRay(status: true);
-    }
+
     void FixedUpdate()
     {
         if (!GameManager.instance.isLevelActive) return;
@@ -32,29 +32,51 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         RaycastHit hit;
         if (Physics.Raycast(rayOrigin.position, transform.TransformDirection(Vector3.down), out hit, rayDistance))
         {
-            if (hit.collider.TryGetComponent(out BlockController block))
+            if (hit.collider.TryGetComponent(out BlockMover block))
             {
                 if (currentBlock != block)
                 {
                     currentBlock = block;
-                    MovedToNewBlockEvent?.Invoke(currentBlock);
                 }
             }
         }
         else
         {
-            blockRay = true;
-            Rigidbody rigi = GetComponent<Rigidbody>();
-            rigi.useGravity = blockRay;
+            //blockRay = true;
+            //Rigidbody rigi = GetComponent<Rigidbody>();
+            //rigi.useGravity = blockRay;
         }
     }
 
-    public void SetBlockRay(bool status)
+    void SetBlockRay(bool block)
     {
-        blockRay = status;
+        blockRay = block;
     }
-    public BlockController GetCurrentBlock()
+    public BlockMover GetCurrentBlock()
     {
         return currentBlock;
     }
+
+    // EVENT SUBSCRIBERS
+    private void OnMoveToNewBlock(Transform _)
+    {
+        SetBlockRay(block: true);
+    }
+
+    private void OnHorizontalMovementEnded()
+    {
+        SetBlockRay(block: false);
+    }
+
+    private void OnArrivedToTheFinish()
+    {
+        SetBlockRay(block: true);
+    }
+
+    private void OnNextLevelStarted()
+    {
+        currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
+        SetBlockRay(block: false);
+    }
+    //
 }
