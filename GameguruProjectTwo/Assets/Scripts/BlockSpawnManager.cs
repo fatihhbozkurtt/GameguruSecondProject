@@ -14,8 +14,8 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     [Header("Debug")]
     [SerializeField] StackController currentStackController;
     [SerializeField] List<StackController> spawnedStacks;
-    int stackIndex;
-    bool canFinishLineSpawn;
+    int _stackIndex;
+    bool _isFinishAlreadySpawned;
 
     protected override void Awake()
     {
@@ -34,12 +34,12 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
         Vector3 spawnPos = new Vector3(charPos.x, 0, charPos.z);
 
         StackController _stack = Instantiate(stackPrefab, spawnPos, Quaternion.identity, transform);
-        _stack.name = "Stack_" + stackIndex;
+        _stack.name = "Stack_" + _stackIndex;
 
         currentStackController = _stack;
         spawnedStacks.Add(currentStackController);
-        stackIndex++;
-        canFinishLineSpawn = true;
+        _stackIndex++;
+        _isFinishAlreadySpawned = false;
     }
 
     private void OnNextLevelStarted()
@@ -50,8 +50,11 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
     public void SpawnBlock()
     {
-        if (HasComeToFinish() && canFinishLineSpawn)
+        if (!GameManager.instance.isLevelActive) return;
+
+        if (HasComeToFinish())
         {
+            _isFinishAlreadySpawned = true;
             SpawnFinishLine();
             return;
         }
@@ -69,9 +72,9 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
     void SpawnFinishLine()
     {
-        if (!canFinishLineSpawn) return;
+        if (_isFinishAlreadySpawned) return;
+        _isFinishAlreadySpawned = true;
 
-        canFinishLineSpawn = false;
         BlockMover lastSpawned = GetLastSpawnedBlock();
         Vector3 lastPos = lastSpawned.transform.position;
         Vector3 spawnPos = new Vector3(lastPos.x, 0, lastPos.z + 3);
@@ -81,8 +84,7 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     bool HasComeToFinish()
     {
         int lastSpawnedIndex = currentStackController.GetListCount();
-        canFinishLineSpawn = lastSpawnedIndex == maxStackCount;
-        return canFinishLineSpawn;
+        return lastSpawnedIndex == maxStackCount;
     }
     #region Getters
 
@@ -94,7 +96,6 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     {
         return currentStackController.GetBlockFromIndexNo(targetIndex);
     }
-
     public BlockMover GetCurrentInitialBlock()
     {
         return currentStackController.GetBlockFromIndexNo(0);

@@ -65,8 +65,8 @@ public class DivisionBehavior : MonoBehaviour
 
     private Vector3 GetPositionEdge(MeshRenderer mesh, Direction direction)
     {
-        var extents = mesh.bounds.extents;
-        var position = mesh.transform.position;
+        Vector3 extents = mesh.bounds.extents;
+        Vector3 position = mesh.transform.position;
 
         switch (direction)
         {

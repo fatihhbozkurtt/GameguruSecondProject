@@ -1,9 +1,7 @@
 using UnityEngine;
-using System;
 
 public class GroundChecker : MonoSingleton<GroundChecker>
 {
-
     [Header("References")]
     [SerializeField] Transform rayOrigin;
 
@@ -57,7 +55,7 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         return currentBlock;
     }
 
-    // EVENT SUBSCRIBERS
+    #region Events Subscribers
     private void OnMoveToNewBlock(Transform _)
     {
         SetBlockRay(block: true);
@@ -78,5 +76,6 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
         SetBlockRay(block: false);
     }
-    //
+    #endregion
+
 }

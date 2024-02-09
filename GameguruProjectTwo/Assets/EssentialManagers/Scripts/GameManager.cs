@@ -21,7 +21,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
 
-        if (!PlayerPrefs.HasKey(cumulativeStagePlayedKey)) 
+        if (!PlayerPrefs.HasKey(cumulativeStagePlayedKey))
             PlayerPrefs.SetInt(cumulativeStagePlayedKey, 1);
     }
     public void StartGame()
@@ -41,14 +41,9 @@ public class GameManager : MonoSingleton<GameManager>
         isLevelSuccessful = success;
 
         LevelEndedEvent?.Invoke();
-        if (success)
-        {
-            LevelSuccessEvent?.Invoke();
-        }
-        else
-        {
-            LevelFailedEvent?.Invoke();
-        }
+        
+        if (success) LevelSuccessEvent?.Invoke();
+        else LevelFailedEvent?.Invoke();
     }
     public void NextStage()
     {
