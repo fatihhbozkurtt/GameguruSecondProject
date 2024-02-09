@@ -24,7 +24,7 @@ public class CharacterMover : MonoSingleton<CharacterMover>
 
     private void PrepareToMoveNewBlock(Transform _blockTr)
     {
-        Vector3 newBlockPos = _blockTr.GetComponent<DivisionBehavior>().GetStandingPos();
+        Vector3 newBlockPos = _blockTr.GetComponent<DivisionBehavior>().transform.position;
         float xValue = newBlockPos.x;
         StartCoroutine(MoveRoutine(xValue));
     }

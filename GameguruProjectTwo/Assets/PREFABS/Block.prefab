@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5701053801e567446bcb9557e2244f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceBlockPrefab: {fileID: 8545973604948647742}
   fallingPrefab: {fileID: 8545973604948647738, guid: ae5227e07c56be54cb943c243b35fc0e, type: 3}
-  standPrefab: {fileID: 8545973604948647738, guid: fd263a3bb7d327440b69fb36aa0ca6be, type: 3}
+  lowestScaleTreshold: 0.45
+  xTolerance: 1
+  instantiatedStandingBlock: {fileID: 0}
