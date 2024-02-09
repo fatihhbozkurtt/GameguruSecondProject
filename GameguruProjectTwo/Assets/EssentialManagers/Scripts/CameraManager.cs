@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using DG.Tweening;
 
 public class CameraManager : MonoSingleton<CameraManager>
 {
@@ -33,13 +34,24 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     private void Start()
     {
-        GameManager.instance.LevelStartedEvent += (() => { SetCam(CamType.Game); });
-        GameManager.instance.LevelFailedEvent += (() => { SetCam(CamType.Fail); });
-        GameManager.instance.LevelSuccessEvent += (() =>
-        {
-            SetCam(CamType.Win);
-            if (confetti != null) confetti.Play(true);
-        });
+        GameManager.instance.LevelStartedEvent += () => { SetCam(CamType.Game); };
+        GameManager.instance.LevelFailedEvent += () => { SetCam(CamType.Fail); };
+
+        CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnCharArrivedFinish;
+        GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
+    }
+
+    private void OnNextLevelStarted()
+    {
+        winCam.transform.SetParent(transform);
+        SetCam(CamType.Game);
+    }
+
+    private void OnCharArrivedFinish()
+    {
+        Transform rotater = ConstantRotater.instance.transform;
+        winCam.transform.position = new Vector3(rotater.position.x, 10, rotater.position.z - 10);
+        winCam.transform.SetParent(ConstantRotater.instance.transform);
     }
 
     public void SetCam(CamType camType)
@@ -62,5 +74,4 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         return vcamArr[(int)camType];
     }
-
 }

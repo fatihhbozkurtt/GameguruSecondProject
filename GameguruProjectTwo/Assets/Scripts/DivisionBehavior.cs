@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 public enum Direction
 {
@@ -9,80 +10,120 @@ public enum Direction
 public class DivisionBehavior : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] Transform referenceBlockPrefab;
     [SerializeField] GameObject fallingPrefab;
-    [SerializeField] GameObject standPrefab;
 
     [Header("Debug")]
-    MeshRenderer referenceMesh;
     BlockMover _blockMover;
-    Vector3 standingPos;
+    Direction _direction;
+    float minValue = .1f;
+    float xTolerance = 0.5f;
 
+    [HideInInspector] public GameObject instantiatedStandingBlock;
     private void Awake()
     {
         _blockMover = GetComponent<BlockMover>();
         _blockMover.BlockStoppedMovingEvent += OnBlockStopped;
-        referenceMesh = referenceBlockPrefab.GetComponent<MeshRenderer>();
     }
 
     private void OnBlockStopped()
     {
-        GetComponent<MeshRenderer>().enabled = false;
-        BlockMover previousBlock = BlockSpawnManager.instance.GetBlockFromIndexNo(_blockMover.GetIndex() - 1);
-        Vector3 distance = previousBlock.transform.position - transform.position;
-        DivideBlock(value: distance.x);
-    }
+        Transform previousBlock = BlockSpawnManager.instance.GetBlockFromIndexNo(_blockMover.GetIndex() - 1).transform;
+        float prevXScale = previousBlock.transform.transform.localScale.x; // default block scale
+        float RemainBlockScaleX = 0;
+        bool isFailed = false;
+        bool isPerfectMatched = false;
+        //----------
+        Vector3 distance = transform.position - previousBlock.transform.position;
 
-    private void DivideBlock(float value)
-    {
-        bool isFirstFalling = value > 0;
+        if (distance.x > 0)
+            _direction = Direction.Right;
+        else
+            _direction = Direction.Left;
 
-        Transform falling = Instantiate(fallingPrefab).transform;
-        Transform stand = Instantiate(standPrefab).transform;
 
-        //Size
-        Vector3 fallingSize = referenceBlockPrefab.localScale;
-        fallingSize.x = Math.Abs(value);
-        falling.localScale = fallingSize;
-
-        Vector3 standSize = referenceBlockPrefab.localScale;
-        standSize.x = referenceBlockPrefab.localScale.x - Math.Abs(value);
-        stand.localScale = standSize;
-
-        //Position
-        Vector3 fallingPosition = GetPositionEdge(referenceMesh, isFirstFalling ? Direction.Left : Direction.Right);
-        int fallingMultiply = (isFirstFalling ? 1 : -1);
-        fallingPosition.x += (fallingSize.x / 2) * fallingMultiply;
-        falling.position = fallingPosition;
-
-        Vector3 standPosition = GetPositionEdge(referenceMesh, !isFirstFalling ? Direction.Left : Direction.Right);
-        int standMultiply = (!isFirstFalling ? 1 : -1);
-        standPosition.x += (standSize.x / 2) * standMultiply;
-        stand.position = standPosition;
-
-        standingPos = standPosition;
-    }
-
-    private Vector3 GetPositionEdge(MeshRenderer mesh, Direction direction)
-    {
-        Vector3 extents = mesh.bounds.extents;
-        Vector3 position = mesh.transform.position;
-
-        switch (direction)
+        if (Mathf.Abs(distance.x) <= xTolerance)
         {
-            case Direction.Left:
-                position.x += -extents.x;
-                break;
-            case Direction.Right:
-                position.x += extents.x;
-                break;
+            // Play audio
+            isPerfectMatched = true;
+            Debug.LogWarning("Perfect matched");
         }
 
-        return position;
-    }
 
+
+        //--------
+
+        if (_direction == Direction.Right)
+        {
+            Vector3 PrewRightPos = previousBlock.transform.position + new Vector3(prevXScale / 2f, 0, 0);
+            Vector3 CurrentLeftPos = transform.position - new Vector3(transform.localScale.x / 2f, 0, 0);
+            Vector3 CurrentRightPos = transform.position + new Vector3(transform.localScale.x / 2f, 0, 0);
+
+            RemainBlockScaleX = Mathf.Abs(PrewRightPos.x - CurrentLeftPos.x);
+
+            if (CurrentLeftPos.x > PrewRightPos.x)
+            {
+                Debug.LogError("FAIL");
+                isFailed = true;
+            }
+
+
+            //------ Falling Instantiate
+            Vector3 fallingPos = new Vector3((CurrentRightPos.x + PrewRightPos.x) / 2, transform.position.y, transform.position.z);
+            float fallingXScale = transform.localScale.x - RemainBlockScaleX;
+
+            GameObject cloneFalling = Instantiate(fallingPrefab, fallingPos, Quaternion.identity);
+            cloneFalling.transform.localScale = new Vector3(fallingXScale, 1, 3);
+            //------------------
+
+
+            transform.position = new Vector3((PrewRightPos.x + CurrentLeftPos.x) / 2f, transform.position.y, transform.position.z);
+            transform.localScale = new Vector3(RemainBlockScaleX, 1, 3);
+            if (RemainBlockScaleX <= minValue)
+            {
+                transform.AddComponent<Rigidbody>();
+                return;
+            }
+        }
+        else
+        {
+            Vector3 PrewLeftPos = previousBlock.transform.position - new Vector3(prevXScale / 2f, 0, 0);
+            Vector3 CurrentRightPos = transform.position + new Vector3(transform.localScale.x / 2f, 0, 0);
+            Vector3 CurrentLeftPos = transform.position - new Vector3(transform.localScale.x / 2f, 0, 0);
+            RemainBlockScaleX = Mathf.Abs(PrewLeftPos.x - CurrentRightPos.x);
+
+            if (CurrentRightPos.x < PrewLeftPos.x)
+            {
+                Debug.LogError("FAIL");
+                isFailed = true;
+            }
+
+            //------ Falling Instantiate
+            Vector3 fallingPos = new Vector3((CurrentLeftPos.x + PrewLeftPos.x) / 2, transform.position.y, transform.position.z);
+            float fallingXScale = transform.localScale.x - RemainBlockScaleX;
+
+            GameObject cloneFalling = Instantiate(fallingPrefab, fallingPos, Quaternion.identity);
+            cloneFalling.transform.localScale = new Vector3(fallingXScale, 1, 3);
+            //------------------------
+
+            transform.position = new Vector3((PrewLeftPos.x + CurrentRightPos.x) / 2f, transform.position.y, transform.position.z);
+            transform.localScale = new Vector3(RemainBlockScaleX, 1, 3);
+            if (RemainBlockScaleX <= minValue)
+            {
+                transform.AddComponent<Rigidbody>();
+                return;
+            }
+
+        }
+
+        //  if (isPerfectMatched) transform.position = new Vector3(previousBlock.position.x, transform.position.y, transform.position.z);
+
+
+        BlockSpawnManager.instance.SetMaxXScale(RemainBlockScaleX);
+        BlockSpawnManager.instance.SpawnBlock();
+        //if (isFailed) return;
+    }
     public Vector3 GetStandingPos()
     {
-        return standingPos;
+        return transform.position;
     }
 }

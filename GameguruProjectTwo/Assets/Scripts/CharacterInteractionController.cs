@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class CharacterInteractionController : MonoSingleton<CharacterInteractionController>
@@ -14,6 +15,14 @@ public class CharacterInteractionController : MonoSingleton<CharacterInteraction
 
     private void OnNextLevelStarted()
     {
+        //IEnumerator ActivationRoutine()
+        //{
+        //    yield return new WaitForSeconds(.75f);
+        //   
+        //}
+
+        //StartCoroutine(ActivationRoutine());
+
         blockCollision = false;
     }
 

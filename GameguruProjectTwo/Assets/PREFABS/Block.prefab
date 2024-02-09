@@ -111,8 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bec8208793fc31d45bee62d5e00ee0c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delta: 1.5
-  speed: 1.5
+  delta: 3
+  speed: 2.25
   blockMovement: 0
   initialBlock: 0
   _index: 0
@@ -129,7 +129,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceBlockPrefab: {fileID: 8545973604948647742}
-  referenceMesh: {fileID: 8545973604948647740}
   fallingPrefab: {fileID: 8545973604948647738, guid: ae5227e07c56be54cb943c243b35fc0e, type: 3}
   standPrefab: {fileID: 8545973604948647738, guid: fd263a3bb7d327440b69fb36aa0ca6be, type: 3}
-  last: {fileID: 0}

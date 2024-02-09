@@ -14,12 +14,13 @@ public class GroundChecker : MonoSingleton<GroundChecker>
 
     private void Start()
     {
-        currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
+        //currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
 
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
         FrontColliderHandler.instance.PrepareToMoveNewBlockEvent += OnMoveToNewBlock;
         CharacterMover.instance.HorizontalMovementEndedEvent += OnHorizontalMovementEnded;
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
+        BlockSpawnManager.instance.PreSpawnAdjustmentsAreDoneEvent += OnPreSpawnAdjustmentsDone;
     }
 
     void FixedUpdate()
@@ -40,6 +41,8 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         }
         else
         {
+            Debug.LogError("There is no block under the character, current block is null");
+
             //blockRay = true;
             //Rigidbody rigi = GetComponent<Rigidbody>();
             //rigi.useGravity = blockRay;
@@ -73,8 +76,12 @@ public class GroundChecker : MonoSingleton<GroundChecker>
 
     private void OnNextLevelStarted()
     {
-        currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
         SetBlockRay(block: false);
+    }
+
+    private void OnPreSpawnAdjustmentsDone(BlockMover currentInitialBlock)
+    {
+        currentBlock = currentInitialBlock;
     }
     #endregion
 

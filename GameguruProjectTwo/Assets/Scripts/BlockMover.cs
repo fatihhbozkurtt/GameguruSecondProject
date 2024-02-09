@@ -10,7 +10,7 @@ public class BlockMover : MonoBehaviour
     [SerializeField] float delta;  // Amount to move left and right from the start point
     [SerializeField] float speed;
     [SerializeField] bool blockMovement;
-    [SerializeField] bool initialBlock;
+    public bool initialBlock;
 
     [Header("Debug")]
     [SerializeField] int _index;
@@ -45,7 +45,7 @@ public class BlockMover : MonoBehaviour
         if (blockMovement) return;
 
         float xPos = delta * Mathf.Sin(Time.time * speed);
-        transform.localPosition = new Vector3(xPos + initXPos, transform.localPosition.y, transform.localPosition.z);
+        transform.localPosition = new Vector3(xPos, transform.localPosition.y, transform.localPosition.z);
 
     }
     public int GetIndex()

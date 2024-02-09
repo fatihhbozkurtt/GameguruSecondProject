@@ -3306,6 +3306,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825001963}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &856738533
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8545973604948647738, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_Name
+      value: Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647738, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545973604948647742, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ed9cde2443787464bb5ecffea2111f06, type: 3}
 --- !u!1 &864480161
 GameObject:
   m_ObjectHideFlags: 0
@@ -7181,7 +7242,11 @@ PrefabInstance:
     - target: {fileID: 453795561387296891, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_Follow
       value: 
-      objectReference: {fileID: 968385528}
+      objectReference: {fileID: 0}
+    - target: {fileID: 453795561387296891, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
+      propertyPath: m_LookAt
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3934330142165637476, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_Name
       value: MANAGERS
@@ -10654,14 +10719,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5155758244918042123, guid: b35f5a75217268441a3f33bf711028a5, type: 3}
-      propertyPath: currentBlock
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5859225122167150620, guid: b35f5a75217268441a3f33bf711028a5, type: 3}
-      propertyPath: blockMovement
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8684250280063309207, guid: b35f5a75217268441a3f33bf711028a5, type: 3}
       propertyPath: m_RootOrder
       value: 2

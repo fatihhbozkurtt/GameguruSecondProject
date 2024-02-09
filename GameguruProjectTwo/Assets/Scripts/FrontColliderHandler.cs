@@ -8,16 +8,16 @@ public class FrontColliderHandler : MonoSingleton<FrontColliderHandler>
     {
         if (other.TryGetComponent(out BlockMover _newBlockMover))
         {
-            BlockMover currenBlock = GroundChecker.instance.GetCurrentBlock();
+            BlockMover currentBlock = GroundChecker.instance.GetCurrentBlock();
 
-            if (currenBlock == _newBlockMover) return;
+            if (currentBlock == _newBlockMover) return;
 
             if (_newBlockMover.IsBlockStopped())
             {
                 PrepareToMoveNewBlockEvent?.Invoke(_newBlockMover.transform);
             }
             else
-                Debug.LogWarning("Fail, new block s still moving");
+                Debug.LogWarning("Fail, new block's still moving");
         }
     }
 }
