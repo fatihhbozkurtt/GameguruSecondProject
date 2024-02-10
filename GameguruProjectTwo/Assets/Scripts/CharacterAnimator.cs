@@ -2,35 +2,35 @@ using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
-    Animator animator;
+    Animator _animator;
     private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
     {
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
+        GameManager.instance.LevelFailedEvent += OnLevelFailed;
+    }
+    private void OnLevelFailed()
+    {
+        _animator.enabled = false;
     }
 
     private void OnNextLevelStarted()
     {
-        TriggerRunning();
+        TriggerAnimation(animationName: "Run");
     }
 
     private void OnArrivedToTheFinish()
     {
-        TriggerDancing();
+        TriggerAnimation(animationName: "Dance");
     }
 
-    public void TriggerDancing()
+    public void TriggerAnimation(string animationName)
     {
-        animator.SetTrigger("Dance");
-    }
-
-    public void TriggerRunning()
-    {
-        animator.SetTrigger("Run");
+        _animator.SetTrigger(animationName);
     }
 }

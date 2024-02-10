@@ -4,40 +4,40 @@ using UnityEngine;
 public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 {
     public event PreSpawnAdjustmentsAreDoneDelegate PreSpawnAdjustmentsAreDoneEvent;
-    public delegate void PreSpawnAdjustmentsAreDoneDelegate(BlockMover currentInitialBlock);
+    public delegate void PreSpawnAdjustmentsAreDoneDelegate(ParentBlockClass currentInitialBlock);
 
     [Header("Configuration")]
-    [SerializeField] int maxStackCount;
+    [SerializeField] int maxBlockCount;
 
     [Header("References")]
-    [SerializeField] BlockMover blockPrefab;
+    [SerializeField] BlockMovementController blockPrefab;
     [SerializeField] StackController stackPrefab;
     [SerializeField] GameObject finishLine;
 
     [Header("Debug")]
     [SerializeField] StackController currentStackController;
     [SerializeField] List<StackController> spawnedStacks;
-    float maxXScale;
+    float _remainingXScale;
     int _stackIndex;
     bool _isFinishAlreadySpawned;
 
     protected override void Awake()
     {
         base.Awake();
-        PreSpawnAdjustments();
     }
     private void Start()
     {
-        //InputManager.instance.TouchOccuredEvent += SpawnBlock;
+
+        PreSpawnAdjustments();
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
         SpawnBlock();
     }
     private void PreSpawnAdjustments()
     {
-        maxXScale = 3;
+        _remainingXScale = 3;
 
         Vector3 charPos = CharacterMover.instance.transform.position;
-        Vector3 spawnPos = new Vector3(charPos.x, 0, charPos.z);
+        Vector3 spawnPos = new Vector3(charPos.x, 0, charPos.z - 1.5f); // minus character's initial Z pos / 2 (3)
 
         StackController _stack = Instantiate(stackPrefab, spawnPos, Quaternion.identity, transform);
         _stack.name = "Stack_" + _stackIndex;
@@ -46,7 +46,6 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
         spawnedStacks.Add(currentStackController);
         _stackIndex++;
         _isFinishAlreadySpawned = false;
-
 
         PreSpawnAdjustmentsAreDoneEvent?.Invoke(GetCurrentInitialBlock());
     }
@@ -59,9 +58,7 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
     public void SpawnBlock()
     {
-        if (!GameManager.instance.isLevelActive) return;
-
-        if (HasComeToFinish())
+        if (ArrivedToFinish())
         {
             if (!_isFinishAlreadySpawned)
             {
@@ -72,13 +69,14 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
             return;
         }
 
-        BlockMover lastSpawned = GetLastSpawnedBlock();
-
+        ParentBlockClass lastSpawned = GetLastSpawnedBlock();
         Vector3 lastPos = lastSpawned.transform.position;
-        Vector3 spawnPos = new Vector3(lastPos.x, -.5f, lastPos.z + 3);
+        float zPos = (lastSpawned.transform.localScale.z / 2) + lastPos.z + 1.5f;
 
-        BlockMover newBlock = Instantiate(blockPrefab, spawnPos, Quaternion.identity, currentStackController.transform);
-        newBlock.transform.localScale = new Vector3(maxXScale, 1, 3);
+        Vector3 spawnPos = new Vector3(lastPos.x + (lastSpawned.transform.localScale.x), -.5f, zPos);
+
+        BlockMovementController newBlock = Instantiate(blockPrefab, spawnPos, Quaternion.identity, currentStackController.transform);
+        newBlock.transform.localScale = new Vector3(_remainingXScale, 1, 3);
 
         currentStackController.AddBlock(newBlock);
         int index = currentStackController.GetList().IndexOf(newBlock);
@@ -87,50 +85,40 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
     void SpawnFinishLine()
     {
-        BlockMover lastSpawned = GetLastSpawnedBlock();
+        ParentBlockClass lastSpawned = GetLastSpawnedBlock();
         Vector3 lastPos = lastSpawned.transform.position;
         Vector3 spawnPos = new Vector3(lastPos.x, 0, lastPos.z + 3);
 
         Instantiate(finishLine, spawnPos, Quaternion.identity, null);
     }
-    bool HasComeToFinish()
+    bool ArrivedToFinish()
     {
         int lastSpawnedIndex = currentStackController.GetListCount();
-        return lastSpawnedIndex == maxStackCount;
+        return lastSpawnedIndex == maxBlockCount;
     }
-    #region Getters
+    #region Getters / Settters
 
-    public BlockMover GetLastSpawnedBlock()
+    public ParentBlockClass GetLastSpawnedBlock()
     {
         return currentStackController.GetLastSpawned();
     }
-    public BlockMover GetBlockFromIndexNo(int targetIndex)
+    public ParentBlockClass GetBlockFromIndexNo(int targetIndex)
     {
         return currentStackController.GetBlockFromIndexNo(targetIndex);
     }
-    private BlockMover GetCurrentInitialBlock()
+    private ParentBlockClass GetCurrentInitialBlock()
     {
         return currentStackController.GetBlockFromIndexNo(0);
     }
 
-    public void SetMaxXScale(float value)
+    public int GetMaxBlockCount()
     {
-        maxXScale = value;
+        return maxBlockCount;
+    }
+
+    public void SetRemainingXScale(float value)
+    {
+        _remainingXScale = value;
     }
     #endregion
-
-    //bool CanSpawnMore()
-    //{
-    //    int lastSpawnedIndex = spawnedBlocks.Count - 1;
-    //    if (lastSpawnedIndex == 0) return true;
-
-
-    //    BlockMover block = GroundChecker.instance.GetCurrentBlock();
-
-    //    int currentBlockIndex = block.GetIndex();
-    //    int diff = lastSpawnedIndex - currentBlockIndex;
-    //    bool status = diff > 1 ? false : true;
-
-    //    return status;
-    //}
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GroundChecker : MonoSingleton<GroundChecker>
@@ -9,15 +10,12 @@ public class GroundChecker : MonoSingleton<GroundChecker>
     [SerializeField] float rayDistance;
 
     [Header("Debug")]
-    [SerializeField] BlockMover currentBlock;
+    [SerializeField] ParentBlockClass currentBlock;
     [SerializeField] bool blockRay;
-
     private void Start()
     {
-        //currentBlock = BlockSpawnManager.instance.GetCurrentInitialBlock();
-
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
-        FrontColliderHandler.instance.PrepareToMoveNewBlockEvent += OnMoveToNewBlock;
+        FrontCollisionHandler.instance.PrepareToMoveNewBlockEvent += OnMoveToNewBlock;
         CharacterMover.instance.HorizontalMovementEndedEvent += OnHorizontalMovementEnded;
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnArrivedToTheFinish;
         BlockSpawnManager.instance.PreSpawnAdjustmentsAreDoneEvent += OnPreSpawnAdjustmentsDone;
@@ -31,7 +29,7 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         RaycastHit hit;
         if (Physics.Raycast(rayOrigin.position, transform.TransformDirection(Vector3.down), out hit, rayDistance))
         {
-            if (hit.collider.TryGetComponent(out BlockMover block))
+            if (hit.collider.TryGetComponent(out ParentBlockClass block))
             {
                 if (currentBlock != block)
                 {
@@ -42,18 +40,23 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         else
         {
             Debug.LogError("There is no block under the character, current block is null");
-
-            //blockRay = true;
-            //Rigidbody rigi = GetComponent<Rigidbody>();
-            //rigi.useGravity = blockRay;
+            TriggerFail();
         }
+    }
+
+    private void TriggerFail()
+    {
+        blockRay = true;
+        GameManager.instance.EndGame(success: false);
+        Rigidbody rigi = GetComponent<Rigidbody>();
+        rigi.useGravity = true;
     }
 
     void SetBlockRay(bool block)
     {
         blockRay = block;
     }
-    public BlockMover GetCurrentBlock()
+    public ParentBlockClass GetCurrentBlock()
     {
         return currentBlock;
     }
@@ -76,10 +79,16 @@ public class GroundChecker : MonoSingleton<GroundChecker>
 
     private void OnNextLevelStarted()
     {
-        SetBlockRay(block: false);
+        IEnumerator Routine()
+        {
+            yield return new WaitForSeconds(.75f);
+            SetBlockRay(block: false);
+        }
+
+        StartCoroutine(Routine());
     }
 
-    private void OnPreSpawnAdjustmentsDone(BlockMover currentInitialBlock)
+    private void OnPreSpawnAdjustmentsDone(ParentBlockClass currentInitialBlock)
     {
         currentBlock = currentInitialBlock;
     }

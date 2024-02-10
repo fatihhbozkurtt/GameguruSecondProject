@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class BlockMover : MonoBehaviour
+public class BlockMovementController : ParentBlockClass
 {
     public event Action BlockStoppedMovingEvent;
 
@@ -10,11 +9,6 @@ public class BlockMover : MonoBehaviour
     [SerializeField] float delta;  // Amount to move left and right from the start point
     [SerializeField] float speed;
     [SerializeField] bool blockMovement;
-    public bool initialBlock;
-
-    [Header("Debug")]
-    [SerializeField] int _index;
-    float initXPos;
 
     public void Initialize(int index)
     {
@@ -22,12 +16,10 @@ public class BlockMover : MonoBehaviour
 
         _index = index;
         gameObject.name = "Block_" + _index.ToString();
-        initXPos = transform.position.x;
     }
     private void OnTouchOccured()
     {
         if (blockMovement) return;
-        if (initialBlock) return;
 
         Stop();
 
@@ -47,10 +39,6 @@ public class BlockMover : MonoBehaviour
         float xPos = delta * Mathf.Sin(Time.time * speed);
         transform.localPosition = new Vector3(xPos, transform.localPosition.y, transform.localPosition.z);
 
-    }
-    public int GetIndex()
-    {
-        return _index;
     }
 
     public bool IsBlockStopped()

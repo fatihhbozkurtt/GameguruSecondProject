@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cinemachine;
-using DG.Tweening;
+using UnityEngine;
 
 public class CameraManager : MonoSingleton<CameraManager>
 {
@@ -11,6 +8,7 @@ public class CameraManager : MonoSingleton<CameraManager>
         Menu, Game, Win, Fail
     }
 
+    [Header("References")]
     public Camera mainCam;
     public CinemachineVirtualCamera menuCam;
     public CinemachineVirtualCamera gameCam;
@@ -36,6 +34,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         GameManager.instance.LevelStartedEvent += () => { SetCam(CamType.Game); };
         GameManager.instance.LevelFailedEvent += () => { SetCam(CamType.Fail); };
+        GameManager.instance.LevelSuccessEvent += () => { SetCam(CamType.Win); };
 
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnCharArrivedFinish;
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
@@ -43,8 +42,9 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     private void OnNextLevelStarted()
     {
-        winCam.transform.SetParent(transform);
         SetCam(CamType.Game);
+        winCam.transform.SetParent(transform);
+
     }
 
     private void OnCharArrivedFinish()
@@ -68,6 +68,7 @@ public class CameraManager : MonoSingleton<CameraManager>
                 vcamArr[i].Priority = 0;
             }
         }
+        winCam.transform.localRotation = Quaternion.Euler(45, 0, 0);
     }
 
     public CinemachineVirtualCamera GetCam(CamType camType)

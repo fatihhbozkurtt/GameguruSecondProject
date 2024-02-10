@@ -11,9 +11,10 @@ public class CharacterMover : MonoSingleton<CharacterMover>
 
     [Header("Debug")]
     [SerializeField] bool blockMovement;
+    Rigidbody rb;
     private void Start()
     {
-        FrontColliderHandler.instance.PrepareToMoveNewBlockEvent += PrepareToMoveNewBlock; 
+        FrontCollisionHandler.instance.PrepareToMoveNewBlockEvent += PrepareToMoveNewBlock; 
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
     }
 

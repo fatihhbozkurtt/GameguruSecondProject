@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class StackController : MonoBehaviour
 {
-    [SerializeField] List<BlockMover> spawnedBlocks;
+    [SerializeField] List<ParentBlockClass> spawnedBlocks;
 
-    public void AddBlock(BlockMover spawnedBlock)
+    public void AddBlock(BlockMovementController spawnedBlock)
     {
         spawnedBlocks.Add(spawnedBlock);
     }
 
-    public BlockMover GetLastSpawned()
+    public ParentBlockClass GetLastSpawned()
     {
         return spawnedBlocks[spawnedBlocks.Count - 1];
     }
 
-    public List<BlockMover> GetList()
+    public List<ParentBlockClass> GetList()
     {
         return spawnedBlocks;
     }
 
-    public BlockMover GetBlockFromIndexNo(int targetIndex)
+    public ParentBlockClass GetBlockFromIndexNo(int targetIndex)
     {
         return spawnedBlocks[targetIndex];
     }
