@@ -44,7 +44,6 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         SetCam(CamType.Game);
         winCam.transform.SetParent(transform);
-
     }
 
     private void OnCharArrivedFinish()
@@ -68,7 +67,7 @@ public class CameraManager : MonoSingleton<CameraManager>
                 vcamArr[i].Priority = 0;
             }
         }
-        winCam.transform.localRotation = Quaternion.Euler(45, 0, 0);
+       // winCam.transform.localRotation = Quaternion.Euler(45, 0, 0);
     }
 
     public CinemachineVirtualCamera GetCam(CamType camType)

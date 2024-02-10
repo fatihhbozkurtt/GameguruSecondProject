@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[DefaultExecutionOrder(10)]
 public class GameManager : MonoSingleton<GameManager>
 {
     [HideInInspector] public bool isLevelActive = false;
@@ -12,7 +13,6 @@ public class GameManager : MonoSingleton<GameManager>
     public event System.Action LevelEndedEvent; // fired regardless of fail or success
     public event System.Action LevelSuccessEvent; // fired only on success
     public event System.Action LevelFailedEvent; // fired only on fail
-    public event System.Action LevelAboutToChangeEvent; // fired just before next level load
 
     public void Start()
     {
@@ -39,11 +39,11 @@ public class GameManager : MonoSingleton<GameManager>
     public void NextStage()
     {
         isLevelActive = true;
-        NextLevelStartedEvent?.Invoke();
+        NextLevelStartedEvent?.Invoke(); // for other non-manager classes' settings
+        LevelStartedEvent?.Invoke(); // for Canvas and Camera manager settings
     }
     public void RestartStage()
     {
-        LevelAboutToChangeEvent?.Invoke();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         _totalPlayedLevelCount = 0;
     }

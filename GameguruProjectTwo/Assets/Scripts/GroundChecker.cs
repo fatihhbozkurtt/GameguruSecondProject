@@ -1,10 +1,12 @@
 using System.Collections;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class GroundChecker : MonoSingleton<GroundChecker>
 {
     [Header("References")]
     [SerializeField] Transform rayOrigin;
+    [SerializeField] Transform startPlatform;
 
     [Header("Configuration")]
     [SerializeField] float rayDistance;
@@ -49,8 +51,16 @@ public class GroundChecker : MonoSingleton<GroundChecker>
     {
         blockRay = true;
         GameManager.instance.EndGame(success: false);
-        Rigidbody rigi = GetComponent<Rigidbody>();
-        rigi.useGravity = true;
+
+        IEnumerator FailRoutine()
+        {
+            Rigidbody rigi = GetComponent<Rigidbody>();
+            rigi.useGravity = true;
+            yield return new WaitForSeconds(2f);
+            Destroy(gameObject);
+        }
+
+        StartCoroutine(FailRoutine());
     }
 
     void SetBlockRay(bool block)

@@ -276,6 +276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayOrigin: {fileID: 373457741023236245}
+  startPlatform: {fileID: 0}
   rayDistance: 3
   currentBlock: {fileID: 0}
   blockRay: 0

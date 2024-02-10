@@ -18,6 +18,7 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     [SerializeField] StackController currentStackController;
     [SerializeField] List<StackController> spawnedStacks;
     float _remainingXScale;
+    const float _constVerticalPos = -0.5f;
     int _stackIndex;
     bool _isFinishAlreadySpawned;
 
@@ -71,15 +72,17 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
         ParentBlockClass lastSpawned = GetLastSpawnedBlock();
         Vector3 lastPos = lastSpawned.transform.position;
-        float zPos = (lastSpawned.transform.localScale.z / 2) + lastPos.z + 1.5f;
 
-        Vector3 spawnPos = new Vector3(lastPos.x + (lastSpawned.transform.localScale.x), -.5f, zPos);
+        float zPos = (lastSpawned.transform.localScale.z / 2) + lastPos.z + 1.5f;
+        int index = (GetLastSpawnedBlock().GetIndex() + 1);
+        int sign = (GetLastSpawnedBlock().GetIndex() + 1) % 2 == 0 ? 1 : -1;
+
+        Vector3 spawnPos = new Vector3(3 * sign, _constVerticalPos, zPos);
 
         BlockMovementController newBlock = Instantiate(blockPrefab, spawnPos, Quaternion.identity, currentStackController.transform);
-        newBlock.transform.localScale = new Vector3(_remainingXScale, 1, 3);
+        newBlock.transform.localScale = new Vector3(_remainingXScale, 1, 3);// y and z scale values are constant never get modified
 
         currentStackController.AddBlock(newBlock);
-        int index = currentStackController.GetList().IndexOf(newBlock);
         newBlock.Initialize(index);
     }
 

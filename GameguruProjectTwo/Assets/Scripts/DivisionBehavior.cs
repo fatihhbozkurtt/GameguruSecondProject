@@ -118,7 +118,9 @@ public class DivisionBehavior : MonoBehaviour
 
         HandleMatchedAudio(perfectlyMatched);
 
-        if (scaleBelowTreshold) return; // standing piece still needs to be positioned but not spawn trigger should be blocked
+        
+        if (scaleBelowTreshold) return; // standing piece still needs to be positioned adn then fall
+                                        // but not triggering spawn should be blocked
 
         BlockSpawnManager.instance.SetRemainingXScale(RemainBlockScaleX);
         BlockSpawnManager.instance.SpawnBlock();
