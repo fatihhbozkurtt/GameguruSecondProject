@@ -113,6 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   delta: 3
   speed: 2.25
+  moveSmoothly: 0
   blockMovement: 0
 --- !u!114 &9014747654712094129
 MonoBehaviour:
@@ -127,6 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallingPrefab: {fileID: 8545973604948647738, guid: ae5227e07c56be54cb943c243b35fc0e, type: 3}
-  lowestScaleTreshold: 0.35
-  perfectMatchedTolerance: 0.75
+  lowestScaleTreshold: 0.25
+  perfectMatchedTolerance: 0.3
   instantiatedStandingBlock: {fileID: 0}

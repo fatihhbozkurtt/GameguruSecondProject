@@ -3,12 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    public static readonly string lastPlayedStageKey = "n_lastPlayedStage";
-    public static readonly string randomizeStagesKey = "n_randomizeStages";
-    public static readonly string cumulativeStagePlayedKey = "n_cumulativeStages";
-
     [HideInInspector] public bool isLevelActive = false;
     [HideInInspector] public bool isLevelSuccessful = false;
+    int _totalPlayedLevelCount = 1;
 
     public event System.Action NextLevelStartedEvent;
     public event System.Action LevelStartedEvent;
@@ -17,14 +14,7 @@ public class GameManager : MonoSingleton<GameManager>
     public event System.Action LevelFailedEvent; // fired only on fail
     public event System.Action LevelAboutToChangeEvent; // fired just before next level load
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        if (!PlayerPrefs.HasKey(cumulativeStagePlayedKey))
-            PlayerPrefs.SetInt(cumulativeStagePlayedKey, 1);
-    }
-    public void StartGame()
+    public void Start()
     {
         isLevelActive = true;
         LevelStartedEvent?.Invoke();
@@ -34,6 +24,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         isLevelActive = false;
         EndGame(success: true);
+        _totalPlayedLevelCount++;
     }
     public void EndGame(bool success)
     {
@@ -41,25 +32,23 @@ public class GameManager : MonoSingleton<GameManager>
         isLevelSuccessful = success;
 
         LevelEndedEvent?.Invoke();
-        
+
         if (success) LevelSuccessEvent?.Invoke();
         else LevelFailedEvent?.Invoke();
     }
     public void NextStage()
     {
-        PlayerPrefs.SetInt(cumulativeStagePlayedKey, PlayerPrefs.GetInt(cumulativeStagePlayedKey, 1) + 1);
-
         isLevelActive = true;
         NextLevelStartedEvent?.Invoke();
-        LevelAboutToChangeEvent?.Invoke();
     }
     public void RestartStage()
     {
         LevelAboutToChangeEvent?.Invoke();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        _totalPlayedLevelCount = 0;
     }
-    public int GetTotalStagePlayed()
+    public int GetTotalPlayedLevelCOunt()
     {
-        return PlayerPrefs.GetInt(cumulativeStagePlayedKey, 1);
+        return _totalPlayedLevelCount;
     }
 }

@@ -1,6 +1,3 @@
-using System.Reflection;
-using UnityEngine;
-
 public class InputManager : MonoSingleton<InputManager>
 {
     public event System.Action TouchOccuredEvent;

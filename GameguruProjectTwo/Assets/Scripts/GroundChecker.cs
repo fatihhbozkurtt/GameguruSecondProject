@@ -12,6 +12,7 @@ public class GroundChecker : MonoSingleton<GroundChecker>
     [Header("Debug")]
     [SerializeField] ParentBlockClass currentBlock;
     [SerializeField] bool blockRay;
+
     private void Start()
     {
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
@@ -44,7 +45,7 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         }
     }
 
-    private void TriggerFail()
+    void TriggerFail()
     {
         blockRay = true;
         GameManager.instance.EndGame(success: false);

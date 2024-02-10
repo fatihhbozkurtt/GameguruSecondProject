@@ -41,26 +41,21 @@ public class CanvasManager : MonoSingleton<CanvasManager>
 
         FadeInScreen(1f);
         ShowPanel(PanelType.MainMenu);
-
-
-        // HACK: Workaround for FBSDK
-        // FBSDK spawns a persistent EventSystem object. Since Unity 2020.2 there must be only one EventSystem objects at a given time.
-        // So we must dispose our own EventSystem object if it exists.
-        UnityEngine.EventSystems.EventSystem[] eventSystems = FindObjectsOfType<UnityEngine.EventSystems.EventSystem>();
-        if (eventSystems.Length > 1)
-        {
-            Destroy(GetComponentInChildren<UnityEngine.EventSystems.EventSystem>().gameObject);
-            Debug.LogWarning("There are multiple live EventSystem components. Destroying ours.");
-        }
     }
 
     void Start()
     {
-        levelText.text = "LEVEL " + GameManager.instance.GetTotalStagePlayed().ToString();
+        SetLevelText();
 
         GameManager.instance.LevelStartedEvent += (() => ShowPanel(PanelType.Game));
         GameManager.instance.LevelSuccessEvent += (() => ShowPanel(PanelType.Success));
         GameManager.instance.LevelFailedEvent += (() => ShowPanel(PanelType.Fail));
+        GameManager.instance.NextLevelStartedEvent += (() => SetLevelText());
+    }
+
+    private void SetLevelText()
+    {
+        levelText.text = "LEVEL " + GameManager.instance.GetTotalPlayedLevelCOunt().ToString();
     }
 
     public void ShowPanel(PanelType panelId)
@@ -110,17 +105,6 @@ public class CanvasManager : MonoSingleton<CanvasManager>
     {
         screenFader.DOFade(1, duration).From(0).OnComplete(callback);
     }
-
-    public void FadeOutScreen(float duration)
-    {
-        screenFader.DOFade(1, duration).From(0);
-    }
-
-    public void FadeInScreen(TweenCallback callback, float duration)
-    {
-        screenFader.DOFade(0, duration).From(1).OnComplete(callback);
-    }
-
     public void FadeInScreen(float duration)
     {
         screenFader.DOFade(0, duration).From(1);
