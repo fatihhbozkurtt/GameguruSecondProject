@@ -10,4 +10,8 @@ public class ParentBlockClass : MonoBehaviour
         return _index;
     }
 
+    public void SetColor(Color color)
+    {
+        GetComponent<MeshRenderer>().material.color = color;
+    }
 }

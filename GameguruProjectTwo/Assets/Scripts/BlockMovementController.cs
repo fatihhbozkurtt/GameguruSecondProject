@@ -22,6 +22,9 @@ public class BlockMovementController : ParentBlockClass
 
         _index = index;
         gameObject.name = "Block_" + _index.ToString();
+
+        int parentStackIndex = transform.parent.GetComponent<StackController>().GetIndex(); 
+        SetColor(ColorManager.instance.GetColorFromIndex(_index, stackIndex: parentStackIndex));
     }
     private void OnTouchOccured()
     {

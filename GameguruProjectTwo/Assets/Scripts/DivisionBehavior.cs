@@ -9,11 +9,14 @@ public enum Direction
 
 public class DivisionBehavior : MonoBehaviour
 {
+
+    #region OLD 
+
     [Header("References")]
     [SerializeField] GameObject fallingPrefab;
 
     [Header("Configuraiton")]
-    [SerializeField] float lowestScaleTreshold;
+    [SerializeField] float lowestScaleThreshold;
     [SerializeField] float perfectMatchedTolerance;
 
     [Header("Debug")]
@@ -61,7 +64,7 @@ public class DivisionBehavior : MonoBehaviour
                 return;
             }
 
-            if (CheckIfScaleBelowTreshold(RemainBlockScaleX))
+            if (CheckIfScaleBelowThreshold(RemainBlockScaleX))
             {
                 TriggerFail();
                 scaleBelowTreshold = true;
@@ -93,7 +96,7 @@ public class DivisionBehavior : MonoBehaviour
                 return;
             }
 
-            if (CheckIfScaleBelowTreshold(RemainBlockScaleX))
+            if (CheckIfScaleBelowThreshold(RemainBlockScaleX))
             {
                 TriggerFail();
                 scaleBelowTreshold = true;
@@ -118,7 +121,7 @@ public class DivisionBehavior : MonoBehaviour
 
         HandleMatchedAudio(perfectlyMatched);
 
-        
+
         if (scaleBelowTreshold) return; // standing piece still needs to be positioned adn then fall
                                         // but not triggering spawn should be blocked
 
@@ -139,9 +142,9 @@ public class DivisionBehavior : MonoBehaviour
         GameObject cloneFalling = Instantiate(fallingPrefab, fallingPos, Quaternion.identity);
         cloneFalling.transform.localScale = new Vector3(fallingXScale, ConstYScale, ConstZScale);
     }
-    bool CheckIfScaleBelowTreshold(float remainingXScale)
+    bool CheckIfScaleBelowThreshold(float remainingXScale)
     {
-        return remainingXScale <= lowestScaleTreshold;
+        return remainingXScale <= lowestScaleThreshold;
     }
     void TriggerFail()
     {
@@ -188,4 +191,193 @@ public class DivisionBehavior : MonoBehaviour
         return dir;
 
     }
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region NEW
+
+    /*
+    [Header("References")]
+    [SerializeField] GameObject fallingPrefab;
+
+    [Header("Configuration")]
+    [SerializeField] float lowestScaleThreshold;
+    [SerializeField] float perfectMatchedTolerance;
+
+    [Header("Debug")]
+    BlockMovementController _blockMover;
+    const float ConstYScale = 1;
+    const float ConstZScale = 3;
+    AudioManager.SoundTag soundTag = AudioManager.SoundTag.PerfectMatched;
+
+    [HideInInspector] public GameObject instantiatedStandingBlock;
+
+    private void Awake()
+    {
+        _blockMover = GetComponent<BlockMovementController>();
+        _blockMover.BlockStoppedMovingEvent += OnBlockStopped;
+    }
+
+    private void OnBlockStopped()
+    {
+        Transform previousBlock = BlockSpawnManager.instance.GetBlockFromIndexNo(_blockMover.GetIndex() - 1).transform;
+        Vector3 distance = transform.position - previousBlock.transform.position;
+
+        bool perfectlyMatched;
+        bool scaleBelowThreshold;
+        float remainingBlockScaleX;
+
+        if (GetDirection(distance) == Direction.Right)
+        {
+            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold);
+        }
+        else
+        {
+            distance.x *= -1; // Invert distance for left direction
+            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold);
+        }
+
+        HandleMatchedAudio(perfectlyMatched);
+
+        if (scaleBelowThreshold) return;// standing piece still needs to be positioned and then fall
+                                        // but spawning the new block should be prevented
+
+
+        BlockSpawnManager.instance.SetRemainingXScale(remainingBlockScaleX);
+        BlockSpawnManager.instance.SpawnBlock();
+    }
+
+    private float CalculateBlockPositionAndScale(Transform previousBlock, Vector3 distance,
+        out bool perfectlyMatched, out bool scaleBelowThreshold)
+    {
+
+        float myXScale = transform.localScale.x;
+        float previousXScale = previousBlock.localScale.x;
+
+        perfectlyMatched = false;
+        scaleBelowThreshold = false;
+
+        float remainingBlockScaleX;
+
+        if (GetDirection(distance) == Direction.Right)
+            remainingBlockScaleX = Mathf.Abs(previousBlock.position.x + previousXScale / 2f - transform.position.x - myXScale / 2f);
+        else
+            remainingBlockScaleX = Mathf.Abs(previousBlock.position.x - previousXScale / 2f - transform.position.x + myXScale / 2f);
+
+
+        if (CheckIfScaleBelowThreshold(remainingBlockScaleX))
+        {
+            TriggerFail();
+            scaleBelowThreshold = true;
+        }
+
+        if (IsPerfectlyMatched(distance.x))
+        {
+            if (!scaleBelowThreshold)
+            {
+                remainingBlockScaleX = myXScale;
+                transform.position = new Vector3(previousBlock.position.x, previousBlock.position.y, transform.position.z);
+                perfectlyMatched = true;
+            }
+        }
+
+        if (!perfectlyMatched)
+        {
+            Vector3 previousPoint = GetLeftmostOrRightmostPoint(previousBlock, Direction.Right);
+            Vector3 myPoint = GetLeftmostOrRightmostPoint(transform, Direction.Left);
+
+            InstantiateFallingPiece(remainingBlockScaleX, previousPoint, myPoint);
+            SetCalculatedPositionAndScale(remainingBlockScaleX, previousPoint, myPoint);
+        }
+
+        return remainingBlockScaleX;
+    }
+
+    private Vector3 GetLeftmostOrRightmostPoint(Transform target, Direction direction)
+    {
+        float targetXScale = target.localScale.x;
+        float offset = direction == Direction.Right ? targetXScale / 2f : -targetXScale / 2f;
+        return target.position + new Vector3(offset, 0, 0);
+    }
+
+    private void SetCalculatedPositionAndScale(float remainingXScale, Vector3 previousPoint, Vector3 myPoint)
+    {
+        transform.position = new Vector3((previousPoint.x + myPoint.x) / 2f, transform.position.y, transform.position.z);
+        transform.localScale = new Vector3(remainingXScale, ConstYScale, ConstZScale);
+    }
+
+    private void InstantiateFallingPiece(float remainingXScale, Vector3 previousPoint, Vector3 myPoint)
+    {
+        Vector3 fallingPos = new Vector3((myPoint.x + previousPoint.x) / 2, transform.position.y, transform.position.z);
+        float fallingXScale = transform.localScale.x - remainingXScale;
+
+        GameObject cloneFalling = Instantiate(fallingPrefab, fallingPos, Quaternion.identity);
+        cloneFalling.transform.localScale = new Vector3(fallingXScale, ConstYScale, ConstZScale);
+    }
+
+    private bool CheckIfScaleBelowThreshold(float remainingXScale)
+    {
+        return remainingXScale <= lowestScaleThreshold;
+    }
+
+    private void TriggerFail()
+    {
+        Debug.LogError("FAIL");
+        GameManager.instance.EndGame(false);
+        transform.AddComponent<Rigidbody>();
+
+        IEnumerator FailRoutine()
+        {
+            yield return new WaitForSeconds(2f);
+            Destroy(gameObject);
+        }
+
+        StartCoroutine(FailRoutine());
+    }
+
+    private bool IsPerfectlyMatched(float distanceX)
+    {
+        if (Mathf.Abs(distanceX) <= perfectMatchedTolerance)
+        {
+            Debug.LogWarning("Perfect matched");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void HandleMatchedAudio(bool perfectlyMatched)
+    {
+        AudioManager manager = AudioManager.instance;
+
+        if (perfectlyMatched)
+            manager.PlaySoundEffect(soundTag, manipulatePitch: true);
+        else
+            manager.OnComboEnded(soundTag);
+    }
+
+    private Direction GetDirection(Vector3 distance)
+    {
+        if (distance.x > 0)
+            return Direction.Right;
+        else
+            return Direction.Left;
+    }*/
+    #endregion
 }

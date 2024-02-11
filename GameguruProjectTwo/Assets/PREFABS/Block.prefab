@@ -128,6 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallingPrefab: {fileID: 8545973604948647738, guid: ae5227e07c56be54cb943c243b35fc0e, type: 3}
-  lowestScaleTreshold: 0.15
-  perfectMatchedTolerance: 0.3
+  lowestScaleThreshold: 0.15
+  perfectMatchedTolerance: 0.25
   instantiatedStandingBlock: {fileID: 0}

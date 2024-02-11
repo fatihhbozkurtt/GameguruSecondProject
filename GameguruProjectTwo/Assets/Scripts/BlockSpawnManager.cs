@@ -28,7 +28,6 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     }
     private void Start()
     {
-
         PreSpawnAdjustments();
         GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
         SpawnBlock();
@@ -45,8 +44,12 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
         currentStackController = _stack;
         spawnedStacks.Add(currentStackController);
+        currentStackController.SetIndex(_stackIndex);
+        GetCurrentInitialBlock().SetColor(ColorManager.instance.GetColorFromIndex(0, stackIndex: _stackIndex));
+
         _stackIndex++;
         _isFinishAlreadySpawned = false;
+
 
         PreSpawnAdjustmentsAreDoneEvent?.Invoke(GetCurrentInitialBlock());
     }
