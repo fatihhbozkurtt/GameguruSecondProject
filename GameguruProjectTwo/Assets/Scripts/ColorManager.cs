@@ -15,8 +15,7 @@ public class ColorManager : MonoSingleton<ColorManager>
 
     public Color GetColorFromIndex(int index, int stackIndex = 0)
     {
-        if (maxBlockCount == 0)
-            maxBlockCount = BlockSpawnManager.instance.GetMaxBlockCount();
+        if (maxBlockCount == 0) maxBlockCount = BlockSpawnManager.instance.GetMaxBlockCount();
         if (stackIndex >= colorData.Count) stackIndex -= colorData.Count;
 
         float t = (float)index / maxBlockCount;  // Calculate t value based on block index

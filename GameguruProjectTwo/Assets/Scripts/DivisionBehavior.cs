@@ -210,6 +210,7 @@ public class DivisionBehavior : MonoBehaviour
 
     #region NEW
 
+
     /*
     [Header("References")]
     [SerializeField] GameObject fallingPrefab;
@@ -243,12 +244,12 @@ public class DivisionBehavior : MonoBehaviour
 
         if (GetDirection(distance) == Direction.Right)
         {
-            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold);
+            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold, Direction.Right);
         }
         else
         {
             distance.x *= -1; // Invert distance for left direction
-            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold);
+            remainingBlockScaleX = CalculateBlockPositionAndScale(previousBlock, distance, out perfectlyMatched, out scaleBelowThreshold, Direction.Left);
         }
 
         HandleMatchedAudio(perfectlyMatched);
@@ -262,7 +263,7 @@ public class DivisionBehavior : MonoBehaviour
     }
 
     private float CalculateBlockPositionAndScale(Transform previousBlock, Vector3 distance,
-        out bool perfectlyMatched, out bool scaleBelowThreshold)
+        out bool perfectlyMatched, out bool scaleBelowThreshold, Direction dir)
     {
 
         float myXScale = transform.localScale.x;
@@ -297,11 +298,20 @@ public class DivisionBehavior : MonoBehaviour
 
         if (!perfectlyMatched)
         {
-            Vector3 previousPoint = GetLeftmostOrRightmostPoint(previousBlock, Direction.Right);
-            Vector3 myPoint = GetLeftmostOrRightmostPoint(transform, Direction.Left);
+            Vector3 previousPoint = GetLeftmostOrRightmostPoint(previousBlock, dir);
+            Vector3 myRightmostPoint = transform.position + new Vector3(myXScale / 2f, 0, 0);
+            Vector3 myLeftmostPoint = transform.position + new Vector3(myXScale / 2f, 0, 0);
 
-            InstantiateFallingPiece(remainingBlockScaleX, previousPoint, myPoint);
-            SetCalculatedPositionAndScale(remainingBlockScaleX, previousPoint, myPoint);
+            if (dir == Direction.Right)
+            {
+                InstantiateFallingPiece(remainingBlockScaleX, previousPoint, myRightmostPoint);
+                SetCalculatedPositionAndScale(remainingBlockScaleX, previousPoint, myLeftmostPoint);
+            }
+            else
+            {
+                InstantiateFallingPiece(remainingBlockScaleX, previousPoint, myLeftmostPoint);
+                SetCalculatedPositionAndScale(remainingBlockScaleX, previousPoint, myRightmostPoint);
+            }
         }
 
         return remainingBlockScaleX;
