@@ -35,9 +35,9 @@ public class CameraManager : MonoSingleton<CameraManager>
         GameManager.instance.LevelStartedEvent += () => { SetCam(CamType.Game); };
         GameManager.instance.LevelFailedEvent += () => { SetCam(CamType.Fail); };
         GameManager.instance.LevelSuccessEvent += () => { SetCam(CamType.Win); };
+        GameManager.instance.NextLevelStartedEvent += () => { OnNextLevelStarted(); };
 
         CharacterInteractionController.instance.ArrivedToTheFinishEvent += OnCharArrivedFinish;
-        GameManager.instance.NextLevelStartedEvent += OnNextLevelStarted;
     }
 
     private void OnNextLevelStarted()
@@ -67,11 +67,5 @@ public class CameraManager : MonoSingleton<CameraManager>
                 vcamArr[i].Priority = 0;
             }
         }
-       // winCam.transform.localRotation = Quaternion.Euler(45, 0, 0);
-    }
-
-    public CinemachineVirtualCamera GetCam(CamType camType)
-    {
-        return vcamArr[(int)camType];
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,12 +5,6 @@ public class ColorManager : MonoSingleton<ColorManager>
 {
     [SerializeField] List<ColorData> colorData;
     [SerializeField] int maxBlockCount;
-
-    private IEnumerator Start()
-    {
-        yield return null;
-
-    }
 
     public Color GetColorFromIndex(int index, int stackIndex = 0)
     {

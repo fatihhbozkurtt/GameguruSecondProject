@@ -42,7 +42,6 @@ public class GroundChecker : MonoSingleton<GroundChecker>
         }
         else
         {
-            Debug.LogError("There is no block under the character, current block is null");
             TriggerFail();
         }
     }

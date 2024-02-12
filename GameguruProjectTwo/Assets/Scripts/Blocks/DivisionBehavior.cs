@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 public enum Direction
@@ -151,7 +152,6 @@ public class DivisionBehavior : MonoBehaviour
     }
     void TriggerFail()
     {
-        Debug.LogError("FAIL");
         GameManager.instance.EndGame(false);
         transform.AddComponent<Rigidbody>();
 
@@ -167,10 +167,7 @@ public class DivisionBehavior : MonoBehaviour
     bool IsPerfectlyMatched(float distanceX)
     {
         if (Mathf.Abs(distanceX) <= perfectMatchedTolerance)
-        {
-            Debug.LogWarning("Perfect matched");
             return true;
-        }
         else
             return false;
     }

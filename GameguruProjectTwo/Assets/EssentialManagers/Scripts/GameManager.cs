@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoSingleton<GameManager>
 {
     [HideInInspector] public bool isLevelActive = false;
-    [HideInInspector] public bool isLevelSuccessful = false;
     int _totalPlayedLevelCount = 1;
 
     public event System.Action NextLevelStartedEvent;
@@ -29,8 +28,6 @@ public class GameManager : MonoSingleton<GameManager>
     public void EndGame(bool success)
     {
         isLevelActive = false;
-        isLevelSuccessful = success;
-
         LevelEndedEvent?.Invoke();
 
         if (success) LevelSuccessEvent?.Invoke();
@@ -47,7 +44,7 @@ public class GameManager : MonoSingleton<GameManager>
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         _totalPlayedLevelCount = 0;
     }
-    public int GetTotalPlayedLevelCOunt()
+    public int GetTotalPlayedLevelCount()
     {
         return _totalPlayedLevelCount;
     }

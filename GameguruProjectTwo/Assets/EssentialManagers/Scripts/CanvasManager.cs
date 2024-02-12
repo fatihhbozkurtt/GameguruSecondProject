@@ -47,15 +47,15 @@ public class CanvasManager : MonoSingleton<CanvasManager>
     {
         SetLevelText();
 
-        GameManager.instance.LevelStartedEvent += (() => ShowPanel(PanelType.Game));
-        GameManager.instance.LevelSuccessEvent += (() => ShowPanel(PanelType.Success));
-        GameManager.instance.LevelFailedEvent += (() => ShowPanel(PanelType.Fail));
-        GameManager.instance.NextLevelStartedEvent += (() => SetLevelText());
+        GameManager.instance.LevelStartedEvent += () => ShowPanel(PanelType.Game);
+        GameManager.instance.LevelSuccessEvent += () => ShowPanel(PanelType.Success);
+        GameManager.instance.LevelFailedEvent += () => ShowPanel(PanelType.Fail);
+        GameManager.instance.NextLevelStartedEvent += () => SetLevelText();
     }
 
     private void SetLevelText()
     {
-        levelText.text = "LEVEL " + GameManager.instance.GetTotalPlayedLevelCOunt().ToString();
+        levelText.text = "LEVEL " + GameManager.instance.GetTotalPlayedLevelCount().ToString();
     }
 
     public void ShowPanel(PanelType panelId)

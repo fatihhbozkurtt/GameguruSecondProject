@@ -10,6 +10,8 @@ public class AudioManager : MonoSingleton<AudioManager>
 
     [Header("Config")]
     public SoundsWrapper[] sounds;
+
+    [Header("Debug")]
     const float _pitchRange = 2.9f;
     float step;
 
@@ -32,7 +34,6 @@ public class AudioManager : MonoSingleton<AudioManager>
         GameManager.instance.LevelEndedEvent += OnLevelEnded;
         float maxBlock = BlockSpawnManager.instance.GetMaxBlockCount();
         step = _pitchRange / maxBlock;
-
     }
 
     private void OnLevelEnded()

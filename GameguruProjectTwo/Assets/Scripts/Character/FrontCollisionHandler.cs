@@ -20,13 +20,6 @@ public class FrontCollisionHandler : MonoSingleton<FrontCollisionHandler>
             {
                 PrepareToMoveNewBlockEvent?.Invoke(parentClass.transform);
             }
-            else
-            {
-
-                Debug.Log("Fail, new block's still moving");
-            }
         }
     }
-
-
 }

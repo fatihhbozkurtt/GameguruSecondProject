@@ -22,10 +22,6 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
     int _stackIndex;
     bool _isFinishAlreadySpawned;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
     private void Start()
     {
         PreSpawnAdjustments();
@@ -49,7 +45,6 @@ public class BlockSpawnManager : MonoSingleton<BlockSpawnManager>
 
         _stackIndex++;
         _isFinishAlreadySpawned = false;
-
 
         PreSpawnAdjustmentsAreDoneEvent?.Invoke(GetCurrentInitialBlock());
     }

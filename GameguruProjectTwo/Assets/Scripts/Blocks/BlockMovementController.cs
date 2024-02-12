@@ -1,7 +1,5 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BlockMovementController : ParentBlockClass
 {
@@ -16,6 +14,7 @@ public class BlockMovementController : ParentBlockClass
     [SerializeField] bool blockMovement;
     bool _isForward;
     const int _consXScale = 3;
+
     public void Initialize(int index)
     {
         InputManager.instance.TouchOccuredEvent += OnTouchOccured;
@@ -23,7 +22,7 @@ public class BlockMovementController : ParentBlockClass
         _index = index;
         gameObject.name = "Block_" + _index.ToString();
 
-        int parentStackIndex = transform.parent.GetComponent<StackController>().GetIndex(); 
+        int parentStackIndex = transform.parent.GetComponent<StackController>().GetIndex();
         SetColor(ColorManager.instance.GetColorFromIndex(_index, stackIndex: parentStackIndex));
     }
     private void OnTouchOccured()
